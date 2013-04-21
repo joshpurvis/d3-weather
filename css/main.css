@@ -1,0 +1,24 @@
+#container {
+    margin-top: 20px;
+}
+
+.states {
+  fill: #E2DDD9;
+}
+
+.county-boundary {
+  fill: none;
+  stroke: #A8A39D;
+  stroke-width: .5px;
+}
+
+.state-boundary {
+  fill: none;
+  stroke: #A8A39D;
+}
+
+.symbol {
+  fill: #B41227;
+  fill-opacity: .8;
+  stroke: #F8F1E9;
+}
