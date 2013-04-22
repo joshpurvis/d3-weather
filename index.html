@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link href="css/bootstrap-combined.min.css" rel="stylesheet">
   </head>
   <body>
 
@@ -11,8 +11,9 @@
         <div class="row-fluid">
             <div class="span6">
                 <div class="well">
-                    <form clas="form form-vertical">
-                        <input type="input" name="q" placeholder="Enter US City" />
+                    <form class="form form-vertical">
+                        <input type="input" name="query" id="query" placeholder="Enter US City, Zip, Address, etc.." />
+                        <button name="search" class="btn btn-small" id="btnSearch">Search</button>
                     </form>
                 </div>
 
@@ -25,11 +26,14 @@
 
     </div>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-    <script src="//d3js.org/d3.v3.min.js"></script>
-    <script src="//d3js.org/topojson.v0.min.js"></script>
-    <script src="//d3js.org/queue.v1.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/topojson.v0.min.js"></script>
+    <script src="js/queue.v1.min.js"></script>
     <script src="js/app.js"></script>
-
+    <script type="text/javascript">
+        weather.init();
+    </script>
   </body>
 </html>
