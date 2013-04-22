@@ -29,10 +29,10 @@ var weather = (function (parent, $) {
         });
     }
 
-    self.draw = function(lat, lon) {
+    self.draw = function(lon, lat) {
 
         /* draw the location marker on map */
-        var coordProjection = self.projection([lat, lon]);
+        var coordProjection = self.projection([lon, lat]);
         self.marker = self.group.append('circle')
             .attr('cx', coordProjection[0])
             .attr('cy', coordProjection[1])
@@ -65,7 +65,7 @@ var weather = (function (parent, $) {
         self.group = self.group ||
             self.svg.append('g');
 
-
+        /* draw state land areas */
         self.group.append("path")
             .attr("class", "states")
             .datum(topojson.object(us, us.objects.states))
@@ -74,11 +74,13 @@ var weather = (function (parent, $) {
 
             });
 
+        /* draw county boundaries */
         self.group.append("path")
             .datum(topojson.mesh(us, us.objects.counties, function(a, b) { return a !== b && !(a.id / 1000 ^ b.id / 1000); }))
             .attr("class", "county-boundary")
             .attr("d", self.path);
 
+        /* draw state boundaries */
         self.group.append("path")
             .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
             .attr("class", "state-boundary")
@@ -97,9 +99,9 @@ var weather = (function (parent, $) {
             self.clear();
             if (status == google.maps.GeocoderStatus.OK) {
                 var coordinates = results[0].geometry.location;
-                var lat = coordinates.kb;
-                var lon = coordinates.jb;
-                self.draw(lat,lon);
+                var lon = coordinates.lng();
+                var lat = coordinates.lat();
+                self.draw(lon,lat);
             }
         });
 
