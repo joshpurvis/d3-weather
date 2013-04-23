@@ -34,8 +34,12 @@ body {
   shape-rendering: crispEdges;
 }
 
-.x.axis path {
-  display: none;
+.grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+}
+.grid path {
+      stroke-width: 0;
 }
 
 .line {
