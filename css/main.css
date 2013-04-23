@@ -34,6 +34,10 @@ body {
   shape-rendering: crispEdges;
 }
 
+.x, .y {
+    font-size: 12px;
+}
+
 .grid .tick {
     stroke: lightgrey;
     opacity: 0.7;
