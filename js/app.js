@@ -144,13 +144,6 @@ var weather = (function (parent, $) {
             .append("g")
                 .attr("transform", "translate(" + self.weatherMargin.left + "," + self.weatherMargin.top + ")");
 
-        self.weatherChart.append("text")
-                .attr("x", (self.weatherWidth / 2) + 30)
-                .attr("y", 0 - (self.weatherMargin.top / 2) + 30)
-                .attr("text-anchor", "middle")
-                .attr("class", "chart-title")
-                .text("48 Hour Forecast");
-
         d3.json(self.apiPrefix + lat + ',' + lon, function(e, response) {
             var data = response.hourly.data;
 
@@ -194,6 +187,14 @@ var weather = (function (parent, $) {
                     .attr("y", 20)
                     .style("text-anchor", "end")
                     .text("Temperature (F)");
+
+            /* add title */
+            self.weatherChart.append("text")
+                    .attr("x", (self.weatherWidth / 2) + 30)
+                    .attr("y", 0 - (self.weatherMargin.top / 2) + 30)
+                    .attr("text-anchor", "middle")
+                    .attr("class", "chart-title")
+                    .text("48 Hour Forecast");
 
             /* draw line */
             var path = self.weatherChart.append("path")

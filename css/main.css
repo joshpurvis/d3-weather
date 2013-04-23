@@ -35,7 +35,7 @@ body {
 }
 
 .x, .y {
-    font-size: 12px;
+  font: 10px sans-serif;
 }
 
 .grid .tick {
