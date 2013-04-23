@@ -1,5 +1,6 @@
 /*
     Josh Purvis - 2013 - BSD License
+    http://github.com/joshpurvis/d3-weather
     http://joshpurvis.com/projects/d3-weather
 */
 
@@ -8,6 +9,12 @@ var weather = (function (parent, $) {
 
     /* preload the geocoder */
     self.geocoder = self.geocoder || new google.maps.Geocoder();
+
+    /*
+        NOTE: This is a proxy around the developer.forecast.io service, to circumvent cross origin protection.
+        Please replace prefix with: http://api.forecast.io/forecast/<YOUR KEY>/
+    */
+    self.apiPrefix = self.apiPrefix || 'http://joshpurvis.com/forecast/'
 
     self.init = function() {
         self.events();
@@ -61,13 +68,13 @@ var weather = (function (parent, $) {
                 .attr("transform", "translate(" + self.weatherMargin.left + "," + self.weatherMargin.top + ")");
 
         self.weatherChart.append("text")
-                .attr("x", (self.weatherWidth / 2))
-                .attr("y", 0 - (self.weatherMargin.top / 2))
+                .attr("x", (self.weatherWidth / 2) + 30)
+                .attr("y", 0 - (self.weatherMargin.top / 2) + 30)
                 .attr("text-anchor", "middle")
                 .attr("class", "chart-title")
-                .text("Weather Forecast");
+                .text("48 Hour Forecast");
 
-        d3.json('http://joshpurvis.com/forecast/' + lat + ',' + lon, function(e, response) {
+        d3.json(self.apiPrefix + lat + ',' + lon, function(e, response) {
             var data = response.hourly.data;
 
             data.forEach(function(d) {
@@ -87,8 +94,7 @@ var weather = (function (parent, $) {
                 .call(self.weatherAxisY)
                 .append("text")
                     .attr("transform", "rotate(-90)")
-                    .attr("y", 6)
-                    .attr("dy", ".51em")
+                    .attr("y", 20)
                     .style("text-anchor", "end")
                     .text("Temperature (F)");
 
@@ -100,7 +106,6 @@ var weather = (function (parent, $) {
 
             /* animate the line */
             var totalPathLength = path.node().getTotalLength();
-
             path
                 .attr("stroke-dasharray", totalPathLength + " " + totalPathLength)
                 .attr("stroke-dashoffset", totalPathLength)
