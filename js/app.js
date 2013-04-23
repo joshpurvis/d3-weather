@@ -12,7 +12,7 @@ var weather = (function (parent, $) {
     self.init = function() {
         self.events();
         queue()
-            .defer(d3.json, '/data/us.json')
+            .defer(d3.json, 'data/us.json')
             .await(self.ready);
     }
 
@@ -50,12 +50,22 @@ var weather = (function (parent, $) {
 
     self.drawWeather = function(lat, lon) {
 
-        var svg = d3.select('#svgWeather').append("svg")
+        self.weatherSvg = d3.select('#svgWeather')
             .attr("width", self.weatherWidth + self.weatherMargin.left + self.weatherMargin.right)
-            .attr("height", self.weatherHeight + self.weatherMargin.top + self.weatherMargin.bottom)
-            .attr('id','weatherChart')
+            .attr("height", self.weatherHeight + self.weatherMargin.top + self.weatherMargin.bottom);
+
+        self.weatherSvg.selectAll('g').remove();
+
+        self.weatherChart = self.weatherSvg
             .append("g")
                 .attr("transform", "translate(" + self.weatherMargin.left + "," + self.weatherMargin.top + ")");
+
+        self.weatherChart.append("text")
+                .attr("x", (self.weatherWidth / 2))
+                .attr("y", 0 - (self.weatherMargin.top / 2))
+                .attr("text-anchor", "middle")
+                .attr("class", "chart-title")
+                .text("Weather Forecast");
 
         d3.json('http://joshpurvis.com/forecast/' + lat + ',' + lon, function(e, response) {
             var data = response.hourly.data;
@@ -67,25 +77,37 @@ var weather = (function (parent, $) {
             self.weatherX.domain(d3.extent(data, function(d) { return d.date; }));
             self.weatherY.domain(d3.extent(data, function(d) { return d.temperature; }));
 
-            svg.append("g")
+            self.weatherChart.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + self.weatherHeight + ")")
                 .call(self.weatherAxisX);
 
-            svg.append("g")
+            self.weatherChart.append("g")
                 .attr("class", "y axis")
                 .call(self.weatherAxisY)
                 .append("text")
                     .attr("transform", "rotate(-90)")
                     .attr("y", 6)
-                    .attr("dy", ".71em")
+                    .attr("dy", ".51em")
                     .style("text-anchor", "end")
                     .text("Temperature (F)");
 
-            svg.append("path")
+            var path = self.weatherChart.append("path")
                 .datum(data)
                 .attr("class", "line")
-                .attr("d", self.weatherLine);
+                .attr("d", self.weatherLine)
+                .attr("fill", "none");
+
+            /* animate the line */
+            var totalPathLength = path.node().getTotalLength();
+
+            path
+                .attr("stroke-dasharray", totalPathLength + " " + totalPathLength)
+                .attr("stroke-dashoffset", totalPathLength)
+                .transition()
+                    .duration(1000)
+                    .ease("linear")
+                    .attr("stroke-dashoffset", 0);
 
         });
     }
@@ -100,6 +122,7 @@ var weather = (function (parent, $) {
         self.weatherWidth = 960 - self.weatherMargin.left - self.weatherMargin.right;
         self.weatherHeight = 500 - self.weatherMargin.top - self.weatherMargin.bottom;
 
+        /* create svg elements for map */
         self.projection = self.projection ||
             d3.geo.albersUsa()
                 .scale(500)
@@ -138,7 +161,7 @@ var weather = (function (parent, $) {
             .attr("class", "state-boundary")
             .attr("d", self.path);
 
-        /* prepare the weather chart elements */
+        /* prepare the weather chart svg elements */
         self.weatherX = d3.time.scale()
             .range([0, self.weatherWidth]);
 
@@ -165,7 +188,7 @@ var weather = (function (parent, $) {
 
         var value = $('#query').val();
         if (value === '') return;
-        self.clearMarker();
+        self.clear();
 
         self.geocoder.geocode({ 'address': value + ', United States'}, function(results, status) {
 
@@ -179,7 +202,7 @@ var weather = (function (parent, $) {
 
     }
 
-    self.clearMarker = function() {
+    self.clear = function() {
         /* remove location marker if exists */
         if (typeof(self.marker) != 'undefined') {
             self.marker.remove();

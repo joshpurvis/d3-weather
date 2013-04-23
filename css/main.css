@@ -40,6 +40,11 @@ body {
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #B41227;
   stroke-width: 1.5px;
+}
+
+.chart-title {
+    font-size: 14px;
+    font-weight: bold;
 }
