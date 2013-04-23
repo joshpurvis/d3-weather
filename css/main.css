@@ -1,3 +1,7 @@
+body {
+  font: 10px sans-serif;
+}
+
 #container {
     margin-top: 20px;
 }
@@ -21,4 +25,21 @@
   fill: #B41227;
   fill-opacity: .8;
   stroke: #F8F1E9;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }

@@ -6,6 +6,9 @@
 var weather = (function (parent, $) {
     var self = parent;
 
+    /* preload the geocoder */
+    self.geocoder = self.geocoder || new google.maps.Geocoder();
+
     self.init = function() {
         self.events();
         queue()
@@ -17,6 +20,7 @@ var weather = (function (parent, $) {
         $('#btnSearch').on('click', function(e){
             self.search();
             e.preventDefault();
+            return false;
         });
 
         $('input').on('keyup', function(e) {
@@ -29,7 +33,7 @@ var weather = (function (parent, $) {
         });
     }
 
-    self.draw = function(lon, lat) {
+    self.draw = function(lat, lon) {
 
         /* draw the location marker on map */
         var coordProjection = self.projection([lon, lat]);
@@ -40,18 +44,66 @@ var weather = (function (parent, $) {
             .attr('class', 'symbol');
 
         /* create weather chart */
-        // ...
+        self.drawWeather(lat, lon);
 
     }
 
+    self.drawWeather = function(lat, lon) {
+
+        var svg = d3.select('#svgWeather').append("svg")
+            .attr("width", self.weatherWidth + self.weatherMargin.left + self.weatherMargin.right)
+            .attr("height", self.weatherHeight + self.weatherMargin.top + self.weatherMargin.bottom)
+            .attr('id','weatherChart')
+            .append("g")
+                .attr("transform", "translate(" + self.weatherMargin.left + "," + self.weatherMargin.top + ")");
+
+        d3.json('http://joshpurvis.com/forecast/' + lat + ',' + lon, function(e, response) {
+            var data = response.hourly.data;
+
+            data.forEach(function(d) {
+                d.date = d.time * 1000;
+            });
+
+            self.weatherX.domain(d3.extent(data, function(d) { return d.date; }));
+            self.weatherY.domain(d3.extent(data, function(d) { return d.temperature; }));
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + self.weatherHeight + ")")
+                .call(self.weatherAxisX);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(self.weatherAxisY)
+                .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Temperature (F)");
+
+            svg.append("path")
+                .datum(data)
+                .attr("class", "line")
+                .attr("d", self.weatherLine);
+
+        });
+    }
+
     self.ready = function(error, us) {
-        var width = 480,
-            height = 250;
+        /* map */
+        self.mapWidth = 480
+        self.mapHeight = 250;
+
+        /* weather chart */
+        self.weatherMargin = {top: 20, right:20, bottom: 30, left: 50};
+        self.weatherWidth = 960 - self.weatherMargin.left - self.weatherMargin.right;
+        self.weatherHeight = 500 - self.weatherMargin.top - self.weatherMargin.bottom;
 
         self.projection = self.projection ||
             d3.geo.albersUsa()
                 .scale(500)
-                .translate([width / 2, height / 2]);
+                .translate([self.mapWidth / 2, self.mapHeight / 2]);
 
         self.path = self.path ||
             d3.geo.path()
@@ -59,8 +111,8 @@ var weather = (function (parent, $) {
 
         self.svg = self.svg ||
             d3.select('#svgContainer').append("svg")
-                .attr("width", width)
-                .attr("height", height);
+                .attr("width", self.mapWidth)
+                .attr("height", self.mapHeight);
 
         self.group = self.group ||
             self.svg.append('g');
@@ -86,6 +138,26 @@ var weather = (function (parent, $) {
             .attr("class", "state-boundary")
             .attr("d", self.path);
 
+        /* prepare the weather chart elements */
+        self.weatherX = d3.time.scale()
+            .range([0, self.weatherWidth]);
+
+        self.weatherY = d3.scale.linear()
+            .range([self.weatherHeight, 0]);
+
+        self.weatherAxisX = d3.svg.axis()
+            .scale(self.weatherX)
+            .orient("bottom");
+
+        self.weatherAxisY = d3.svg.axis()
+            .scale(self.weatherY)
+            .orient("left");
+
+        self.weatherLine = d3.svg.line()
+            .x(function(d) { return self.weatherX(d.date); })
+            .y(function(d) { return self.weatherY(d.temperature); })
+            .interpolate('linear');
+
     }
 
     self.search = function() {
@@ -93,27 +165,25 @@ var weather = (function (parent, $) {
 
         var value = $('#query').val();
         if (value === '') return;
+        self.clearMarker();
 
-        var geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ 'address': value + ', United States'}, function(results, status) {
-            self.clear();
+        self.geocoder.geocode({ 'address': value + ', United States'}, function(results, status) {
+
             if (status == google.maps.GeocoderStatus.OK) {
                 var coordinates = results[0].geometry.location;
                 var lon = coordinates.lng();
                 var lat = coordinates.lat();
-                self.draw(lon,lat);
+                self.draw(lat,lon);
             }
         });
 
     }
 
-    self.clear = function() {
+    self.clearMarker = function() {
         /* remove location marker if exists */
         if (typeof(self.marker) != 'undefined') {
             self.marker.remove();
         }
-
-        /* remove chart */
     }
 
     return self;
