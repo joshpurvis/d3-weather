@@ -6,57 +6,60 @@ body {
     margin-top: 20px;
 }
 
+#searchBox {
+    text-align: center;
+}
+
+/* map */
 .states {
-  fill: #E2DDD9;
+    fill: #E2DDD9;
 }
 
 .county-boundary {
-  fill: none;
-  stroke: #A8A39D;
-  stroke-width: .5px;
+    fill: none;
+    stroke: #A8A39D;
+    stroke-width: .5px;
 }
 
 .state-boundary {
-  fill: none;
-  stroke: #A8A39D;
+    fill: none;
+    stroke: #A8A39D;
 }
 
-.symbol {
-  fill: #B41227;
-  fill-opacity: .8;
-  stroke: #F8F1E9;
+.location-marker {
+    fill: #B41227;
+    fill-opacity: .8;
+    stroke: #F8F1E9;
 }
 
+/* weather chart */
 .axis path,
 .axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
 }
 
-.x, .y {
-  font: 10px sans-serif;
+.x,
+.y {
+    font: 10px sans-serif;
 }
 
 .grid .tick {
-    stroke: lightgrey;
+    stroke: #eee;
     opacity: 0.7;
 }
 .grid path {
-      stroke-width: 0;
+    stroke-width: 0;
 }
 
 .line {
-  fill: none;
-  stroke: #B41227;
-  stroke-width: 1.5px;
+    fill: none;
+    stroke: #B41227;
+    stroke-width: 1.5px;
 }
 
 .chart-title {
     font-size: 14px;
     font-weight: bold;
-}
-
-#svgWeather {
-    margin-top: 20px;
 }

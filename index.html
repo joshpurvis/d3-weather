@@ -4,22 +4,22 @@
         <title>joshpurvis.com - d3 weather forecast experiment</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" type="text/css" href="css/main.css" />
-        <link rel="stylesheet" type="text/css" href="css/bootstrap-combined.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     </head>
     <body>
         <div class="container-fluid" id="container">
             <div class="row-fluid">
-                <div class="span3">
+                <div class="span4">
                     <!-- search input -->
-                    <div class="well">
-                        <h3>Weather Forecast</h3>
-                        <form class="form form-vertical">
-                            <input type="input" name="query" id="query" placeholder="Enter US City, Zip, Address, etc.." />
-                            <button name="search" class="btn btn-small" id="btnSearch">Search</button>
-                        </form>
+                    <div class="well" id="searchBox">
+                    <form class="form form-search">
+                        <h3>Hourly Weather Forecast</h3>
+                        <input type="text" name="query" id="query" class="input-large" placeholder="City, Zip, Address, etc.." />
+                        <button name="search" class="btn btn-small" id="btnSearch">Search</button>
+                    </form>
                     </div>
                 </div>
-                <div class="span9">
+                <div class="span7 offset1">
                     <!-- map result -->
                     <div id="svgContainer"></div>
                 </div>

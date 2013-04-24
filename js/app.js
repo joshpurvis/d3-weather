@@ -12,7 +12,7 @@ var weather = (function (parent, $) {
 
     /*
         NOTE: This is a proxy around the developer.forecast.io service, to circumvent cross origin protection.
-        Please replace prefix with: http://api.forecast.io/forecast/<YOUR KEY>/
+        Please replace and proxy: http://api.forecast.io/forecast/<YOUR KEY>/<lat>,<lon>
     */
     self.apiPrefix = self.apiPrefix || 'http://joshpurvis.com/forecast/'
 
@@ -125,7 +125,7 @@ var weather = (function (parent, $) {
             .attr('cx', coordProjection[0])
             .attr('cy', coordProjection[1])
             .attr('r', 5)
-            .attr('class', 'symbol');
+            .attr('class', 'location-marker');
 
         /* create weather chart */
         self.drawWeather(lat, lon);
