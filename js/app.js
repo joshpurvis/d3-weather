@@ -147,10 +147,10 @@ var weather = (function (parent, $) {
                 .attr("transform", "translate(" + self.weatherMargin.left + "," + self.weatherMargin.top + ")");
 
         d3.json(self.apiPrefix + lat + ',' + lon, function(e, response) {
-
-            /* reset loading button */
-            $('#btnSearch').button('reset');
-
+            if (e) {
+                $('#btnSearch').button('reset');
+                return console.warn(e);
+            }
             var data = response.hourly.data;
 
             data.forEach(function(d) {
@@ -217,6 +217,9 @@ var weather = (function (parent, $) {
                     .duration(1000)
                     .ease("linear")
                     .attr("stroke-dashoffset", 0);
+
+            /* reset loading button */
+            $('#btnSearch').button('reset');
 
         });
 
