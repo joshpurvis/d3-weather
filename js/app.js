@@ -170,11 +170,11 @@ var weather = (function (parent, $) {
             self.weatherChart.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + self.weatherHeight + ")")
-                .call(self.weatherAxisX);
+                .call(self.weatherAxisX());
 
             self.weatherChart.append("g")
                 .attr("class", "y axis")
-                .call(self.weatherAxisY)
+                .call(self.weatherAxisY())
                 .append("text")
                     .attr("transform", "rotate(-90)")
                     .attr("y", 20)
