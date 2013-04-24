@@ -51,19 +51,16 @@ var weather = (function (parent, $) {
         self.weatherHeight = 500 - self.weatherMargin.top - self.weatherMargin.bottom;
 
         /* create svg elements for map */
-        self.projection = self.projection ||
-            d3.geo.albersUsa()
-                .scale(500)
-                .translate([self.mapWidth / 2, self.mapHeight / 2]);
+        self.projection = d3.geo.albersUsa()
+            .scale(500)
+            .translate([self.mapWidth / 2, self.mapHeight / 2]);
 
-        self.path = self.path ||
-            d3.geo.path()
-                .projection(self.projection);
+        self.path = d3.geo.path()
+            .projection(self.projection);
 
-        self.svg = self.svg ||
-            d3.select('#svgContainer').append("svg")
-                .attr("width", self.mapWidth)
-                .attr("height", self.mapHeight);
+        self.svg = d3.select('#svgContainer').append("svg")
+            .attr("width", self.mapWidth)
+            .attr("height", self.mapHeight);
 
         self.group = self.group ||
             self.svg.append('g');
@@ -72,10 +69,7 @@ var weather = (function (parent, $) {
         self.group.append("path")
             .attr("class", "states")
             .datum(topojson.object(us, us.objects.states))
-            .attr("d", self.path)
-            .on("click", function(d) {
-
-            });
+            .attr("d", self.path);
 
         /* draw county boundaries */
         self.group.append("path")
@@ -158,30 +152,29 @@ var weather = (function (parent, $) {
             self.weatherChart.append("g")
                     .attr("class", "grid")
                     .attr("transform", "translate(0," + self.weatherHeight + ")")
-                    .call(self.weatherAxisX()
-                        .tickSize(-self.weatherHeight, 0, 0)
-                        .tickFormat("")
+                    .call(
+                        self.weatherAxisX()
+                            .tickSize(-self.weatherHeight, 0, 0)
+                            .tickFormat("")
                     );
 
             self.weatherChart.append("g")
                 .attr("class", "grid")
-                .call(self.weatherAxisY()
-                    .tickSize(-self.weatherWidth, 0, 0)
-                    .tickFormat("")
+                .call(
+                    self.weatherAxisY()
+                        .tickSize(-self.weatherWidth, 0, 0)
+                        .tickFormat("")
                 );
 
             /* add axes */
             self.weatherChart.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + self.weatherHeight + ")")
-                .call(self.weatherAxisX()
-                );
+                .call(self.weatherAxisX);
 
             self.weatherChart.append("g")
                 .attr("class", "y axis")
-                .call(
-                    self.weatherAxisY()
-                )
+                .call(self.weatherAxisY)
                 .append("text")
                     .attr("transform", "rotate(-90)")
                     .attr("y", 20)
