@@ -25,19 +25,27 @@ var weather = (function (parent, $) {
 
     self.events = function() {
         $('#btnSearch').on('click', function(e){
+            $('#query').blur();
             self.search();
             e.preventDefault();
             return false;
         });
 
-        $('input').on('keyup', function(e) {
+        $('#query').on('keyup', function(e) {
             var code = e.keyCode || e.which;
             if (code == 13) {
+                this.blur();
                 self.search();
                 e.preventDefault();
                 return false;
             }
         });
+
+        $('#query').on('focus', function() {
+            this.select();
+        });
+
+        $('#btnSearch').button();
     }
 
     self.ready = function(error, us) {
@@ -139,6 +147,10 @@ var weather = (function (parent, $) {
                 .attr("transform", "translate(" + self.weatherMargin.left + "," + self.weatherMargin.top + ")");
 
         d3.json(self.apiPrefix + lat + ',' + lon, function(e, response) {
+
+            /* reset loading button */
+            $('#btnSearch').button('reset');
+
             var data = response.hourly.data;
 
             data.forEach(function(d) {
@@ -207,6 +219,8 @@ var weather = (function (parent, $) {
                     .attr("stroke-dashoffset", 0);
 
         });
+
+
     }
 
     self.search = function() {
@@ -215,6 +229,7 @@ var weather = (function (parent, $) {
         var value = $('#query').val();
         if (value === '') return;
         self.clear();
+        $('#btnSearch').button('loading');
 
         self.geocoder.geocode({ 'address': value + ', United States'}, function(results, status) {
 
@@ -223,12 +238,19 @@ var weather = (function (parent, $) {
                 var lon = coordinates.lng();
                 var lat = coordinates.lat();
                 self.draw(lat,lon);
+            } else {
+                $('#searchError').show();
+                $('#query').focus();
+                $('#btnSearch').button('reset');
             }
+
         });
 
     }
 
     self.clear = function() {
+        $('#searchError').hide();
+
         /* remove location marker if exists */
         if (typeof(self.marker) != 'undefined') {
             self.marker.remove();

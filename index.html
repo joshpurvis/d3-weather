@@ -12,11 +12,14 @@
                 <div class="span4">
                     <!-- search input -->
                     <div class="well" id="searchBox">
-                    <form class="form form-search">
+                    <form class="form-horizontal">
                         <h3>Hourly Weather Forecast</h3>
-                        <input type="text" name="query" id="query" class="input-large" placeholder="City, Zip, Address, etc.." />
-                        <button name="search" class="btn btn-small" id="btnSearch">Search</button>
+                        <input type="text" name="query" id="query" class="input-large" placeholder="US City, Zip, Address, etc.." />
+                        <button name="search" class="btn btn-medium" id="btnSearch">Search</button>
                     </form>
+                    <div class="well-small alert-error hide" id="searchError">
+                        Failed to find a location matching given query.
+                    </div>
                     </div>
                 </div>
                 <div class="span7 offset1">
@@ -34,6 +37,7 @@
 
         <script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
         <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="js/bootstrap.buttons.min.js"></script>
         <script src="js/d3.v3.min.js"></script>
         <script src="js/topojson.v0.min.js"></script>
         <script src="js/queue.v1.min.js"></script>
